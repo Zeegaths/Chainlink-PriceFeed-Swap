@@ -3,6 +3,8 @@ pragma solidity ^0.8.13;
 
 import {Test, console} from "forge-std/Test.sol";
 import { TokenSwap } from "../src/TokenSwap.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 
 
 contract TokenSwaptest is Test {
@@ -24,9 +26,15 @@ contract TokenSwaptest is Test {
     function setUp() public {
         tokenSwap = new TokenSwap();
         sepoliaFork = vm.createFork("https://ethereum-sepolia.blockpi.network/v1/rpc/public");
-        polygonFork = vm.createFork("https://polygon-mumbai.g.alchemy.com/v2/kZEbHN2WvilsMOY8SH07KuEh9BBpqlOh");
+        polygonFork = vm.createFork("https://polygon-mumbai.g.alchemy.com/v2/kZEbHN2WvilsMOY8SH07KuEh9BBpqlOh");   
 
-        
+        uint256 _amount = 10e18;
+        //approve the contract from the tokens
+
+        IERC20(DAI).approve((TokenSwap), _amount);
+        IERC20(LINK).approve((TokenSwap), _amount);
+        IERC20(WETH).approve((TokenSwap), _amount);
+
         I   
         
     }
