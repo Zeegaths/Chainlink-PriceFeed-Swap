@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "../contracts/libraries/MyAggregatorV3Interface.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./IERC20.sol";
 
 contract TokenSwap {
        //DAI Holder= 0xA94137119A1c30eFa054fe3ECca7eF4bA8c81ee0
