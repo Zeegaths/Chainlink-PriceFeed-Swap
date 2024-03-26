@@ -22,23 +22,23 @@ contract TokenSwaptest is Test {
     address LINK = 0x779877A7B0D9E8603169DdbD7836e478b4624789;
     address WETH = 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9;
 
+    address daiHolder = 0xEd2cc0E43e97F47e47Cd9a4d4Cd370e95e94f0e8;
+    address linkHolder = 0xEd2cc0E43e97F47e47Cd9a4d4Cd370e95e94f0e8;
+    address ethHolder = 0x3F8A563A80CdAB5D3149F777c244ddd0b954320D;
+
 
     function setUp() public {
-        tokenSwap = new TokenSwap();
+         tokenSwap = new TokenSwap();
         sepoliaFork = vm.createFork("https://ethereum-sepolia.blockpi.network/v1/rpc/public");
         polygonFork = vm.createFork("https://polygon-mumbai.g.alchemy.com/v2/kZEbHN2WvilsMOY8SH07KuEh9BBpqlOh");   
 
-        uint256 _amount = 10e18;
+        uint256 _amount = 1000e18;
         //approve the contract from the tokens
 
         IERC20(DAI).approve((TokenSwap), _amount);
         IERC20(LINK).approve((TokenSwap), _amount);
-        IERC20(WETH).approve((TokenSwap), _amount);
-
-        I   
-        
+        IERC20(WETH).approve((TokenSwap), _amount);    
     }
-
 
     function testForkIdSepolia() public view {
         assert( sepoliaFork != polygonFork);
@@ -46,41 +46,27 @@ contract TokenSwaptest is Test {
 
 
     function testDaiSwap() public  {
-        address daiHolder = 0xA94137119A1c30eFa054fe3ECca7eF4bA8c81ee0;
-        vm.startPrank(daiHolder);        
+        vm.startPrank(ethHolder);
+        IERC20(WETH).transfer(tokenSwap, 100);
+
+       const bal =  IERC20(DAI).balanceOf(daiHolder); 
+       console.log("bal before: ", bal);       
+        vm.startPrank(daiHolder);
+
+        TokenSwap.swapTokens(DAI, WETH, 100) ;  
+        const bal2 =  IERC20(DAI).balanceOf(daiHolder); 
+        console.log("bal after: ", bal2);
+
     }
     function testCurrentFork() public {
         vm.selectFork(sepoliaFork);
         assertEq(vm.activeFork(), sepoliaFork);
     }
 
-    // function test_Increment() public {
-    //     counter.increment();
-    //     assertEq(counter.number(), 1);
-    // }
+    function testSwap() public {
+        
+    }
 
-    // function testFuzz_SetNumber(uint256 x) public {
-    //     counter.setNumber(x);
-    //     assertEq(counter.number(), x);
-    // }
+
 }
 
-// module.exports = {
-//   networks: {
-//     sepolia: {
-//       url: "https://sepolia.io",
-//       accounts: {
-//         mnemonic: "your mnemonic phrase here"
-//       }
-//     }
-//   }
-// };
-
-// foundry deploy --network sepolia
-
-
-
-
-// 0xDd05eCc6875EA22D6B9AEA30Fd7E44f08295Dea0
-
-// f
