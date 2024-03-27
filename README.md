@@ -4,7 +4,7 @@
 
 It forks ethereum sepolia and impersonates accounts to interact on the network.
 
-Find the deployed contract here: https://sepolia.etherscan.io/address/0x2bfd115b1b0fea0733a363a492f7e92a9d520687 
+Find the deployed contract here:  https://sepolia.etherscan.io/address/0x6c3303e3eeea79709802ca090617adf0ad0151e6
 
 ## Documentation
 
@@ -48,10 +48,10 @@ $ anvil
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
-### Cast
+### to run test: 
 
 ```shell
-$ cast <subcommand>
+$ forge test --rpc-url <sepolia url> --evm-version paris -vvvvv
 ```
 
 ### Help
