@@ -23,7 +23,7 @@ contract TokenSwaptest is Test {
     address daiHolder = 0x511243992D17992E34125EF1274C7DCA4a94C030; 
     address linkHolder = 0xEd2cc0E43e97F47e47Cd9a4d4Cd370e95e94f0e8;
     // address ethHolder = 0x3F8A563A80CdAB5D3149F777c244ddd0b954320D;
-    address ethHolder = 0x546e37DAA15cdb82fd1a717E5dEEa4AF08D4349A;
+    address ethHolder = 0xC7d20850E21BeE0873759f6EE7fE91a65A806e33;
 
     function setUp() public {
         tokenSwap = ITokenSwap(0x6C3303e3EEea79709802CA090617aDF0aD0151E6);
@@ -34,67 +34,35 @@ contract TokenSwaptest is Test {
         );
         polygonFork = vm.createFork(
             "https://polygon-mumbai.g.alchemy.com/v2/kZEbHN2WvilsMOY8SH07KuEh9BBpqlOh"
-        );
+        );    
 
-        uint256 _amount = 100 * 10e18;
-        //approve the contract from the tokens
-   
-
-        vm.startPrank(daiHolder);
-        IERC20(DAI).approve(address(tokenSwap), _amount);
-        vm.stopPrank();   
-
-        vm.startPrank(linkHolder);       
-        IERC20(LINK).approve(address(tokenSwap), _amount);
-        vm.stopPrank(); 
-
-        vm.startPrank(ethHolder);       
-        IERC20(WETH).approve(address(tokenSwap), _amount);
-        vm.stopPrank(); 
+    }
+  
+    function testForkIdSepolia() public view {
+        assert(sepoliaFork != polygonFork);
     }
 
-    // function testApproval() public {
-
-    //     uint256 _amount = 100 * 10e18;
-
-    //     vm.startPrank(daiHolder);
-    //     IERC20(DAI).approve(address(tokenSwap), _amount);
-    //     vm.stopPrank();   
-
-    //     vm.startPrank(linkHolder);       
-    //     IERC20(LINK).approve(address(tokenSwap), _amount);
-    //     vm.stopPrank(); 
-
-    //     vm.startPrank(ethHolder);       
-    //     IERC20(WETH).approve(address(tokenSwap), _amount);
-    //     vm.stopPrank(); 
-    // }
-
-    // function testForkIdSepolia() public view {
-    //     assert(sepoliaFork != polygonFork);
-    // }
-
-    function testDaiSwap() public {
+    function testDaiToEthSwap() public {
         uint256 _amount = 100 * 10e18;
         vm.selectFork(sepoliaFork);
 
         vm.startPrank(ethHolder);
-        IERC20(DAI).approve(address(tokenSwap), _amount);
+        IERC20(WETH).approve(address(tokenSwap), _amount);
         vm.stopPrank();
     
 
         vm.startPrank(WETH);
-    //     IERC20(WETH).approve(address(tokenSwap), 100);
+    //   
         IERC20(WETH).transfer(address(tokenSwap), 15);
         uint256 balll = IERC20(WETH).balanceOf(address(tokenSwap));
-        // assertEq(balll, 10);
-        console.log(balll);
+       
+        console.log("weth balance:",balll);
         vm.stopPrank();
 
 
         uint256 balb4 = IERC20(DAI).balanceOf(daiHolder);
         console.log("bal before: ", balb4);
-        // vm.startPrank(daiHolder);
+     
 
         vm.startPrank(daiHolder);
         IERC20(DAI).approve(address(tokenSwap), _amount);
@@ -106,6 +74,42 @@ contract TokenSwaptest is Test {
         vm.stopPrank();
 
         vm.assertGt(balb4, balafter);
+    }
+
+    function testEthToDaiSwap() public {
+         uint256 _amount = 4000 * 10e18;
+        vm.selectFork(sepoliaFork);
+
+        vm.startPrank(daiHolder);
+        IERC20(DAI).approve(address(tokenSwap), _amount);
+        vm.stopPrank();
+    
+
+        vm.startPrank(daiHolder);
+        uint256 amountDai = 4000 * 10e18;
+        IERC20(DAI).transfer(address(tokenSwap), amountDai);
+        uint256 balll = IERC20(DAI).balanceOf(address(tokenSwap));
+       
+        console.log("dai balance: ", balll);
+        vm.stopPrank();
+
+
+        uint256 balb4 = IERC20(WETH).balanceOf(ethHolder);
+        console.log("bal before: ", balb4);
+     
+
+        vm.startPrank(ethHolder);
+        uint256 ethAmount = 2 * 10e18;
+        IERC20(WETH).approve(address(tokenSwap), ethAmount);
+
+        tokenSwap.swapTokens(WETH, DAI, 1);
+
+        uint256 balafter = IERC20(WETH).balanceOf(ethHolder);
+        console.log("bal after: ", balafter);
+        vm.stopPrank();
+
+        vm.assertGt(balb4, balafter);
+
     }
 
 
